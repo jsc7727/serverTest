@@ -57,7 +57,7 @@ const createUsersArgumentCheck = (user) => {
 
 }
 
-const createRooms = ({ db, room }) => {
+const createRoom = async ({ db, room }) => {
     if (createRoomsArgumentCheck(room)) {
         const FieldValue = admin.firestore.FieldValue;
         const res = db.collection("rooms")
@@ -70,10 +70,10 @@ const createRooms = ({ db, room }) => {
 
 }
 
-const createUsers = ({ db, user }) => {
+const createUser = async ({ db, user }) => {
     if (createUsersArgumentCheck(user)) {
         const FieldValue = admin.firestore.FieldValue;
-        const res = db.collection("users").doc(user.name)
+        const res = db.collection("users").doc(user.email)
         const setReturn = await res.set(user)
         const updateReturn = await res.update({ timestamp: FieldValue.serverTimestamp() })
         console.log(setReturn, updateReturn)
@@ -83,4 +83,4 @@ const createUsers = ({ db, user }) => {
     }
 }
 
-module.exports = { createRooms, createUsers }
+module.exports = { createRoom, createUser }
