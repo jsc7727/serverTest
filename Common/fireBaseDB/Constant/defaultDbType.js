@@ -4,17 +4,14 @@ const room = {
     roomTitle: "",
     gameType: "",
     play: false,
-    roomSecret: {
-        secret: false,
-        password: ""
-    },
+    secret: false,
+    password: "",
     roomLimit: 0,
 }
 
 const user = {
     nickname: "",
     email: "",
-    id: "",
     password: "",
     numberOfGames: {
         win: 0,

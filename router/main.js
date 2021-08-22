@@ -1,18 +1,19 @@
 module.exports = function (app, fs) {
 
-    app.get('/', function (req, res) {
-        res.render('index', {
-            title: "MY HOMEPAGE",
-            length: 5
-        })
-    });
 
-    app.get('/list', function (req, res) {
-        fs.readFile(__dirname + "/../data/user.json", 'utf8', function (err, data) {
-            console.log(data);
-            res.end(data);
-        });
-    });
+    app.get('/', (req, res) => {
+        res.send('hello world')
+    })
+
+    app.get('/getRooms', async (req, res, next) => {
+        try {
+            const [roomList, getRoomListSuccess] = await getListOfRooms({ db });
+            const users = JSON.stringify({ roomList, getRoomListSuccess });
+            res.send(users)
+        } catch (error) {
+            next(error)
+        }
+    })
 
     app.get('/getUser/:username', function (req, res) {
         fs.readFile(__dirname + "/../data/user.json", 'utf8', function (err, data) {

@@ -1,16 +1,13 @@
 
 const { isString, isObject, isBoolean, isArray, isNotObjectEmpty } = require('../Constant/checkArgument');
 const getListOfRooms = async ({ db }) => {
-    let success = false;
     const result = await db.collection('rooms').get()
-
-    if (!result.exists) {
-        success = true;
-    }
-
-    console.log("asdfqwer :", await db.collection('rooms').doc('1tg15Jrfzuq8KQQruA9d').get())
-    console.log("-------------------------------------")
-    return [result.docs, success];
+    const resultIsEmpty = result.empty
+    const getlist = result.docs.map(doc => {
+        const { password, ...e } = doc.data();
+        return { ...e, roomId: doc.id }
+    })
+    return [getlist, resultIsEmpty];
 }
 
 // const getDataOfRoom = async ({ db, roomId }) => {
