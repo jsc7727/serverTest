@@ -2,7 +2,7 @@
 const rooms = [
     {
         hostname: "장석찬",
-        guestNames: [],
+        guestList: [],
         roomTitle: "너만 오면 고",
         gameType: "YUT",
         roomSecret: {
@@ -13,7 +13,7 @@ const rooms = [
     },
     {
         hostname: "이종찬",
-        guestNames: [],
+        guestList: [],
         gameType: "AVALON",
         roomTitle: "너만 오면 고",
         gameType: "",
@@ -25,7 +25,7 @@ const rooms = [
     },
     {
         hostname: "정진",
-        guestNames: [],
+        guestList: [],
         roomTitle: "너만 오면 고",
         gameType: "YACHT",
         roomSecret: {
@@ -36,7 +36,7 @@ const rooms = [
     },
     {
         hostname: "조석영",
-        guestNames: [],
+        guestList: [],
         roomTitle: "너만 오면 고",
         gameType: "YACHT",
         roomSecret: {

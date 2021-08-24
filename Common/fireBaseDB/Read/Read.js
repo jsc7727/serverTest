@@ -1,13 +1,13 @@
 
-const { isString, isObject, isBoolean, isArray, isNotObjectEmpty } = require('../Constant/checkArgument');
+const { isString, isObject, isBoolean, isArray, isNotObjectEmpty } = require('../Constant/checkTypeOrEmpty');
 const getListOfRooms = async ({ db }) => {
     const result = await db.collection('rooms').get()
     const resultIsEmpty = result.empty
-    const getlist = result.docs.map(doc => {
+    const roomList = result.docs.map(doc => {
         const { password, ...e } = doc.data();
         return { ...e, roomId: doc.id }
     })
-    return [getlist, resultIsEmpty];
+    return { roomList, success: resultIsEmpty };
 }
 
 // const getDataOfRoom = async ({ db, roomId }) => {
@@ -40,6 +40,6 @@ const getUserFromEmail = async ({ db, email }) => {
     else {
         console.error("getUserFromId error");
     }
-    return [result, success];
+    return { userList: result, success };
 }
 module.exports = { getListOfRooms, getUserFromEmail }

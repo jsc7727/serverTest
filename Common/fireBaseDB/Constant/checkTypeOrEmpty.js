@@ -1,14 +1,21 @@
 const isString = (props) => {
-    return typeof (props) === "string"
+    return typeof (props) === "string" && props !== undefined;
 }
+
 const isObject = (props) => {
-    return typeof (props) === "Object"
+    return typeof (props) === "Object" && props !== undefined;
 }
+
 const isBoolean = (props) => {
-    return typeof (props) === "boolean"
+    return typeof (props) === "boolean" && props !== undefined;
 }
+
 const isArray = (props) => {
-    return Array.isArray(props)
+    return Array.isArray(props) && props !== undefined;
+}
+
+const isNumber = (props) => {
+    return !isNaN(props) && props !== undefined;
 }
 
 const isObjectEmpty = (props) => {
@@ -29,4 +36,6 @@ const isNotObjectEmpty = (props) => {
     }
 }
 
-module.exports = { isString, isObject, isBoolean, isArray, isObjectEmpty, isNotObjectEmpty }
+
+
+module.exports = { isString, isObject, isBoolean, isArray, isNumber, isObjectEmpty, isNotObjectEmpty }

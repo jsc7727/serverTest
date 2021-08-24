@@ -51,7 +51,7 @@ const FieldValue = admin.firestore.FieldValue;
 
 app.get('/getRooms', async (req, res, next) => {
     try {
-        const [roomList, success] = await getListOfRooms({ db });
+        const { roomList, success } = await getListOfRooms({ db });
         const users = JSON.stringify({ roomList, success });
         res.send(users)
     } catch (error) {
@@ -62,9 +62,9 @@ app.get('/getRooms', async (req, res, next) => {
 app.get('/checkUser:email', async (req, res, next) => {
     try {
         const email = req.params.email;
-        const [userData, success] = await getUserFromEmail({ db, email });
-        const users = JSON.stringify({ userData, success });
-        res.send(users)
+        const { user, success } = await getUserFromEmail({ db, email });
+        const jsonUser = JSON.stringify({ user, success });
+        res.send(jsonUser)
     } catch (error) {
         next(error)
     }
@@ -73,12 +73,13 @@ app.get('/checkUser:email', async (req, res, next) => {
 app.post('/createRoom', async (req, res, next) => {
     try {
         const roomConfig = req.body;
-        // console.log("roomConfig : ", req, roomConfig)
-        // const dbCollectionRooms = db.collection("rooms")
-        // const addResult = await dbCollectionRooms.add({ ...roomConfig, timestamp: FieldValue.serverTimestamp() })
-        const addResult = createRoom({ db, roomConfig });
-        const users = JSON.stringify({ id: addResult.id });
-        res.send(users)
+        const { roomId, success } = await createRoom({ db, room: roomConfig });
+        if (success) {
+            res.send(roomId)
+        }
+        else {
+            res.send("")
+        }
     } catch (error) {
         next(error)
     }

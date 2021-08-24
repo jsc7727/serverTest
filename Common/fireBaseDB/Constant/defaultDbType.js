@@ -1,6 +1,6 @@
 const room = {
     hostname: "",
-    guestnames: [],
+    guestList: [],
     roomTitle: "",
     gameType: "",
     play: false,
