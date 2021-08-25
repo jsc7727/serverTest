@@ -5,7 +5,7 @@ module.exports = function (app, fs) {
         res.send('hello world')
     })
 
-    app.get('/getRooms', async (req, res, next) => {
+    app.post('/getRooms', async (req, res, next) => {
         try {
             const [roomList, getRoomListSuccess] = await getListOfRooms({ db });
             const users = JSON.stringify({ roomList, getRoomListSuccess });

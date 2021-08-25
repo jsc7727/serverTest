@@ -14,7 +14,7 @@ const users = require("./Common/fireBaseDB/Create/test/users");
 const rooms = require("./Common/fireBaseDB/Create/test/rooms");
 const { deleteUser, deleteRoom } = require("./Common/fireBaseDB/Delete/Delete")
 
-const { getUserFromEmail, getListOfRooms } = require("./Common/fireBaseDB/Read/Read");
+const { getUserFromEmail, getListOfRooms, getObjectOfRoom } = require("./Common/fireBaseDB/Read/Read");
 const { parse } = require("path");
 const { createRoom, createUser } = require("./Common/fireBaseDB/Create/Create");
 
@@ -31,29 +31,57 @@ const db = admin.firestore();
 
 // console.log(users)
 const FieldValue = admin.firestore.FieldValue;
+
 // users.forEach(async user => {
 //     const a = db.collection("users").doc(user.email)
 //     const test1 = await a.set(user)
 //     const test2 = await a.update({ timestamp: FieldValue.serverTimestamp() })
 //     // console.log(test1, test2)
 // });
-
 // rooms.forEach(async i => {
 //     const a = db.collection("rooms")
 //     const test1 = await a.add({ ...i, timestamp: FieldValue.serverTimestamp() })
 //     // console.log(test1)
 // });
-
 // deleteUser({ db, email: "test1@google.com" });
-
 // console.log(getListOfRooms)
 
 
-app.get('/getRooms', async (req, res, next) => {
+app.post('/getRooms', async (req, res, next) => {
     try {
         const { roomList, success } = await getListOfRooms({ db });
         const users = JSON.stringify({ roomList, success });
         res.send(users)
+    } catch (error) {
+        next(error)
+    }
+})
+
+app.post('/getRoom', async (req, res, next) => {
+    try {
+        const roomId = req.body['roomId'];
+        console.log("getRoom - get room id from request : ", roomId)
+        const { roomObject, success } = await getObjectOfRoom({ db, roomId });
+        console.log("getRoom - get room id from request : ", roomObject)
+
+        const roomObjectWithSuccess = JSON.stringify({ roomObject, success });
+        res.send(roomObjectWithSuccess)
+    } catch (error) {
+        next(error)
+    }
+})
+
+
+app.post('/createRoom', async (req, res, next) => {
+    try {
+        const roomConfig = req.body;
+        const { roomId, success } = await createRoom({ db, room: roomConfig });
+        if (success) {
+            res.send(roomId)
+        }
+        else {
+            res.send("")
+        }
     } catch (error) {
         next(error)
     }
@@ -70,20 +98,6 @@ app.get('/checkUser:email', async (req, res, next) => {
     }
 })
 
-app.post('/createRoom', async (req, res, next) => {
-    try {
-        const roomConfig = req.body;
-        const { roomId, success } = await createRoom({ db, room: roomConfig });
-        if (success) {
-            res.send(roomId)
-        }
-        else {
-            res.send("")
-        }
-    } catch (error) {
-        next(error)
-    }
-})
 
 app.post('/accessRoom', async (req, res, next) => {
     try {
@@ -109,9 +123,5 @@ app.post('/createUser', async (req, res, next) => {
     }
 })
 
-
-
-
-// server.listen("http://localhost:4000", () => console.log('server is running on port 4000'));
 server.listen(process.env.PORT || 4000, () => console.log('server is running on port 4000'));
 

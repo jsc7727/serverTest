@@ -10,27 +10,28 @@ const getListOfRooms = async ({ db }) => {
     return { roomList, success: resultIsEmpty };
 }
 
-// const getDataOfRoom = async ({ db, roomId }) => {
-//     let success = false;
-//     let result = {};
-//     if (isString(roomId)) {
-//         result = await db.collection('rooms').listCollections();
-//         if (isNotObjectEmpty(result)) {
-//             success = true;
-//         }
-//         console.log("get rooms : ", result)
-//     }
-//     else {
-//         console.error("getRooms error");
-//     }
-//     return [result, success];
-// }
+const getObjectOfRoom = async ({ db, roomId }) => {
+    let success = false;
+    let result = {};
+    if (isString(roomId)) {
+        result = await db.collection('rooms').doc(roomId).get();
+        console.log("test result : ", result)
+        if (result.empty) {
+            success = true;
+        }
+        console.log("get Object Of Room : ", result)
+    }
+    else {
+        console.error("getObjectOfRoom error");
+    }
+    return { roomObject: result.data(), success };
+}
 
 const getUserFromEmail = async ({ db, email }) => {
     let success = false;
     let result = {};
     if (isString(email)) {
-        const userRef = db.collection('email')
+        const userRef = db.collection('email');
         result = await userRef.where('email', "==", email)
         if (isNotObjectEmpty(result)) {
             success = true;
@@ -42,4 +43,4 @@ const getUserFromEmail = async ({ db, email }) => {
     }
     return { userList: result, success };
 }
-module.exports = { getListOfRooms, getUserFromEmail }
+module.exports = { getListOfRooms, getUserFromEmail, getObjectOfRoom }
