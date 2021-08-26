@@ -5,7 +5,7 @@ const getRooms = () => {
     const getRoomsConfig = {
         method: 'post',
         url: 'localhost::4000/getRooms',
-        headers: {}
+        headers: { }
     };
     axios(getRoomsConfig)
         .then(function (response) {
@@ -30,7 +30,7 @@ const getRoom = async (roomId) => {
     }
     catch (error) {
         console.error(error)
-        return {}
+        return { }
     }
 }
 
@@ -77,7 +77,7 @@ const checkUserEmail = () => {
 }
 
 
-// getRooms();
+getRooms();
 const test = async () => {
     // 방 생성
     const roomId = await createRoom();

@@ -17,8 +17,9 @@ const { deleteUser, deleteRoom } = require("./Common/fireBaseDB/Delete/Delete")
 const { createRoom, createUser } = require("./Common/fireBaseDB/Create/Create");
 const { joinRoom, disconnectRoom } = require("./Common/fireBaseDB/Update/Update"); // test 용도
 
+const cors = require('cors');
 
-
+app.use(cors());
 // parse application/json
 app.use(jsonParser)
 
