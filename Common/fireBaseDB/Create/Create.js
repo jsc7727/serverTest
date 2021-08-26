@@ -1,4 +1,5 @@
 const admin = require('firebase-admin');
+const FieldValue = admin.firestore.FieldValue;
 const { checkRoomStructure, checkUsersStructure } = require('../Constant/checkStructure');
 
 const createRoom = async ({ db, room }) => {
@@ -14,7 +15,6 @@ const createRoom = async ({ db, room }) => {
                 password,
                 roomLimit,
             } = room;
-            const FieldValue = admin.firestore.FieldValue;
             const res = db.collection("rooms");
             const addReturn = await res.add({
                 hostname,
@@ -27,6 +27,7 @@ const createRoom = async ({ db, room }) => {
                 roomLimit,
                 timestamp: FieldValue.serverTimestamp()
             })
+            console.log("check room")
             return { roomId: addReturn.id, success: true };
         } else {
             return { roomId: "", success: false };
@@ -47,7 +48,6 @@ const createUser = async ({ db, user }) => {
             numberOfGames,
             report,
         } = user;
-        const FieldValue = admin.firestore.FieldValue;
         const res = db.collection("users").doc(user.email);
         const setReturn = await res.set({
             nickname,

@@ -1,5 +1,11 @@
-module.exports = ({ io, socket, roomMatchingUsers }) => {
+const { joinRoom, disconnectRoom } = require("./../../fireBaseDB/Update/Update"); // test 용도
+
+module.exports = ({ io, db, socket, roomMatchingUsers }) => {
     socket.on("join room", ({ roomID, myNickname }) => {
+
+        // room에 사용자 추가
+        joinRoom({ db, roomId: roomID, nickname: myNickname });
+
         if (roomMatchingUsers[roomID] === undefined || !roomMatchingUsers[roomID].some((i) => i === myNickname)) {
             socket.roomID = roomID;
             socket.nickname = myNickname;

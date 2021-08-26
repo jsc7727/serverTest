@@ -2,12 +2,11 @@
 const { isString, isObject, isBoolean, isArray, isNotObjectEmpty } = require('../Constant/checkTypeOrEmpty');
 const getListOfRooms = async ({ db }) => {
     const result = await db.collection('rooms').get()
-    const resultIsEmpty = result.empty
     const roomList = result.docs.map(doc => {
         const { password, ...e } = doc.data();
         return { ...e, roomId: doc.id }
     })
-    return { roomList, success: resultIsEmpty };
+    return { roomList, success: !result.empty };
 }
 
 const getObjectOfRoom = async ({ db, roomId }) => {
@@ -16,7 +15,7 @@ const getObjectOfRoom = async ({ db, roomId }) => {
     if (isString(roomId)) {
         result = await db.collection('rooms').doc(roomId).get();
         console.log("test result : ", result)
-        if (result.empty) {
+        if (!result.empty) {
             success = true;
         }
         console.log("get Object Of Room : ", result)
@@ -33,7 +32,7 @@ const getUserFromEmail = async ({ db, email }) => {
     if (isString(email)) {
         const userRef = db.collection('email');
         result = await userRef.where('email', "==", email)
-        if (isNotObjectEmpty(result)) {
+        if (!result.empty) {
             success = true;
         }
         // console.log("get users : ", result)
