@@ -103,7 +103,6 @@ app.post('/checkUser', async (req, res, next) => {
         console.log
         const { user, success } = await getUserFromEmail({ db, email });
         const jsonUser = JSON.stringify({ user, success });
-        console.log(jsonUser)
         res.send(jsonUser)
     } catch (error) {
         next(error)

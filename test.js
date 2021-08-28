@@ -67,7 +67,7 @@ const checkUserEmail = () => {
         method: 'post',
         url: 'localhost::4000/checkUser',
         data: {
-            email: 'test2@gmail.com'
+            email: 'test2@google.com'
         }
     }
     axios(checkUserEmailConfig)
