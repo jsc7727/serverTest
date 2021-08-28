@@ -4,7 +4,7 @@ const axios = require('axios');
 const getRooms = () => {
     const getRoomsConfig = {
         method: 'post',
-        url: 'http://localhost:4000/getRooms',
+        url: 'http://localhost:4000/api/room/getRooms',
         headers: { }
     };
     axios(getRoomsConfig)
@@ -19,7 +19,7 @@ const getRooms = () => {
 const getRoom = async (roomId) => {
     const getRoomConfig = {
         method: 'post',
-        url: 'http://localhost:4000/getRoom',
+        url: 'http://localhost:4000/api/room/getRoom',
         data: {
             roomId
         }
@@ -38,7 +38,7 @@ const getRoom = async (roomId) => {
 const createRoom = async () => {
     const createRoomConfig = {
         method: 'post',
-        url: 'http://localhost:4000/createRoom',
+        url: 'http://localhost:4000/api/room/createRoom',
         data: {
             hostname: "테스트",
             guestList: [],
@@ -65,7 +65,7 @@ const createRoom = async () => {
 const checkUserEmail = () => {
     const checkUserEmailConfig = {
         method: 'post',
-        url: 'localhost::4000/checkUser',
+        url: 'localhost::4000/api/user/checkUser',
         data: {
             email: 'test2@google.com'
         }
@@ -90,4 +90,4 @@ const test = async () => {
     console.log("room Object: ", roomObject);
 }
 // test();
-checkUserEmail();
+// checkUserEmail();

@@ -1,16 +1,17 @@
-const { joinRoom, disconnectRoom } = require("./../fireBaseDB/Update/Update"); // test 용도
+const fireBaseRoom = require('../fireBaseDB/room');
 
-module.exports = ({ db, io }) => {
-    let roomMatchingUsers = {}
-    let voiceRoomMatchingUsers = {}
+
+module.exports = ({ io }) => {
+    let roomMatchingUsers = { }
+    let voiceRoomMatchingUsers = { }
     io.on('connection', socket => {
-        require("./Room/room")({ io, db, socket, roomMatchingUsers });
+        require("./Room/room")({ io, socket, roomMatchingUsers });
         require("./Room/voiceRoom")({ io, socket, voiceRoomMatchingUsers });
         // require("./chat/chat")({ io, socket });
         socket.on('disconnect', () => {
 
             //  firestore에서 room 안에 있던 사용자 제거
-            disconnectRoom({ db, roomId: socket.roomID, nickname: socket.nickname });
+            fireBaseRoom.disconnectRoom({ roomId: socket.roomID, nickname: socket.nickname });
 
             console.log("disconnect");
             socket.broadcast.to(socket.roomID).emit("disconnect user", socket.id, socket.nickname);

@@ -1,10 +1,10 @@
-const { joinRoom, disconnectRoom } = require("./../../fireBaseDB/Update/Update"); // test 용도
+const fireBaseRoom = require('../../fireBaseDB/room');
 
 module.exports = ({ io, db, socket, roomMatchingUsers }) => {
     socket.on("join room", ({ roomID, myNickname }) => {
         if (roomMatchingUsers[roomID] === undefined || !roomMatchingUsers[roomID].some((i) => i === myNickname)) {
             // room에 사용자 추가
-            joinRoom({ db, roomId: roomID, nickname: myNickname });
+            fireBaseRoom.joinRoom({ roomId: roomID, nickname: myNickname });
             socket.roomID = roomID;
             socket.nickname = myNickname;
             let setUsersInThisRoom = io.sockets.adapter.rooms.get(roomID);
