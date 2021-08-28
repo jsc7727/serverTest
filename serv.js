@@ -20,6 +20,7 @@ const { joinRoom, disconnectRoom } = require("./Common/fireBaseDB/Update/Update"
 const cors = require('cors');
 
 app.use(cors());
+
 // parse application/json
 app.use(jsonParser)
 
@@ -55,7 +56,7 @@ const FieldValue = admin.firestore.FieldValue;
 // console.log(getListOfRooms)
 
 
-app.post('/getRooms', async (req, res, next) => {
+app.post('/getRooms', cors(), async (req, res, next) => {
     try {
         const { roomList, success } = await getListOfRooms({ db });
         const users = JSON.stringify({ roomList, success });
@@ -96,11 +97,13 @@ app.post('/createRoom', async (req, res, next) => {
     }
 })
 
-app.get('/checkUser:email', async (req, res, next) => {
+app.post('/checkUser', async (req, res, next) => {
     try {
-        const email = req.params.email;
+        const email = req.body['email'];
+        console.log
         const { user, success } = await getUserFromEmail({ db, email });
         const jsonUser = JSON.stringify({ user, success });
+        console.log(jsonUser)
         res.send(jsonUser)
     } catch (error) {
         next(error)
