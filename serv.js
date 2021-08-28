@@ -9,7 +9,7 @@ const admin = require('firebase-admin');
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 
-const serviceAccount = require('./startplayup-b27e5-5a7e25ff021b.json');
+const serviceAccount = require('./key.json');
 const users = require("./Common/fireBaseDB/Create/test/users");
 const rooms = require("./Common/fireBaseDB/Create/test/rooms");
 const { getUserFromEmail, getListOfRooms, getObjectOfRoom } = require("./Common/fireBaseDB/Read/Read");
