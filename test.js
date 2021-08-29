@@ -84,10 +84,10 @@ const checkUserEmail = () => {
 const test = async () => {
     // 방 생성
     const roomId = await createRoom();
-    console.log("roomId : ", roomId);
+    // console.log("roomId : ", roomId);
     // roomId 값으로 해당 방 정보 가져오기
     const roomObject = await getRoom(roomId);
-    console.log("room Object: ", roomObject);
+    // console.log("room Object: ", roomObject);
 }
 // test();
-// checkUserEmail();
+checkUserEmail();

@@ -46,8 +46,8 @@ exports.createRoom = async (req, res, next) => {
 exports.accessRoom = async (req, res, next) => {
     try {
         const roomConfig = req.body;
-        const dbCollectionRooms = db.collection("rooms")
-        const res = await dbCollectionRooms.add({ ...roomConfig, timestamp: FieldValue.serverTimestamp() })
+        const dbCollectionRooms = db.collection("rooms");
+        const res = await dbCollectionRooms.add({ ...roomConfig, timestamp: FieldValue.serverTimestamp() });
         const users = JSON.stringify({ id: res.doc.id });
         res.send(users)
     } catch (error) {

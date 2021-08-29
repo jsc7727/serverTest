@@ -13,8 +13,9 @@ const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 const cors = require('cors');
 const socketModule = require("./Common/socketMoudle");
+const morgan = require('morgan');
 
-
+app.use(morgan('dev'))
 
 // cors exception
 app.use(cors());

@@ -3,7 +3,7 @@ const { isString, isObject, isBoolean, isArray } = require('./Constant/checkType
 const admin = require('firebase-admin');
 const db = admin.firestore();
 const FieldValue = admin.firestore.FieldValue;
-
+const crypto = require('crypto')
 exports.createRoom = async ({ room }) => {
     try {
         if (checkRoomStructure(room)) {
@@ -18,6 +18,9 @@ exports.createRoom = async ({ room }) => {
                 roomLimit,
             } = room;
             const res = db.collection("rooms");
+            const encrypted = crypto.createHmac('sha1', config.secret)
+                      .update(password)
+                      .digest('base64')
             const addReturn = await res.add({
                 hostname,
                 guestList,
@@ -65,11 +68,10 @@ exports.getObjectOfRoom = async ({ roomId }) => {
     let result = { };
     if (isString(roomId)) {
         result = await db.collection('rooms').doc(roomId).get();
-        console.log("test result : ", result)
         if (!result.empty) {
             success = true;
         }
-        console.log("get Object Of Room : ", result)
+        // console.log("get Object Of Room : ", result)
     }
     else {
         console.error("getObjectOfRoom error");
