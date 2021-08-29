@@ -4,6 +4,8 @@ const admin = require('firebase-admin');
 const db = admin.firestore();
 const FieldValue = admin.firestore.FieldValue;
 const crypto = require('crypto')
+const config = require('../../config');
+
 exports.createRoom = async ({ room }) => {
     try {
         if (checkRoomStructure(room)) {
@@ -19,8 +21,8 @@ exports.createRoom = async ({ room }) => {
             } = room;
             const res = db.collection("rooms");
             const encrypted = crypto.createHmac('sha1', config.secret)
-                      .update(password)
-                      .digest('base64')
+                .update(password)
+                .digest('base64')
             const addReturn = await res.add({
                 hostname,
                 guestList,
@@ -28,7 +30,7 @@ exports.createRoom = async ({ room }) => {
                 gameType,
                 play,
                 secret,
-                password,
+                password: encrypted,
                 roomLimit,
                 timestamp: FieldValue.serverTimestamp()
             })
@@ -57,17 +59,19 @@ exports.deleteRoom = async ({ roomId }) => {
 exports.getListOfRooms = async () => {
     const result = await db.collection('rooms').get()
     const roomList = result.docs.map(doc => {
-        const { password, ...e } = doc.data();
-        return { ...e, roomId: doc.id }
+        const { password, ...room } = doc.data();
+        return { ...room, roomId: doc.id }
     })
     return { roomList, success: !result.empty };
 }
 
 exports.getObjectOfRoom = async ({ roomId }) => {
     let success = false;
-    let result = { };
+    let room = { };
     if (isString(roomId)) {
-        result = await db.collection('rooms').doc(roomId).get();
+        const result = await db.collection('rooms').doc(roomId).get();
+        const { password, ...roomWithoutPassword } = result.data();
+        room = roomWithoutPassword;
         if (!result.empty) {
             success = true;
         }
@@ -76,7 +80,7 @@ exports.getObjectOfRoom = async ({ roomId }) => {
     else {
         console.error("getObjectOfRoom error");
     }
-    return { roomObject: result.data(), success };
+    return { roomObject: room, success };
 }
 
 
@@ -119,4 +123,28 @@ exports.disconnectRoom = async ({ roomId, nickname }) => {
         console.error(error);
         return { success: false };
     }
+}
+
+exports.accessRoom = async ({ roomId, password }) => {
+    let correct = false;
+    let success = false;
+    if (isString(roomId) &&
+        isString(password)) {
+        const encrypted = crypto.createHmac('sha1', config.secret)
+            .update(password)
+            .digest('base64')
+        const result = await db.collection('rooms').doc(roomId).get();
+        const { password: roomPassword } = result.data();
+        if (!result.empty) {
+            success = true;
+            if (encrypted === roomPassword) {
+                correct = true;
+            }
+        }
+        // console.log("get Object Of Room : ", result)
+    }
+    else {
+        console.error("getObjectOfRoom error");
+    }
+    return { correct, success };
 }

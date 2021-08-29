@@ -80,6 +80,26 @@ const checkUserEmail = () => {
 }
 
 
+const accessRoom = () => {
+    const checkUserEmailConfig = {
+        method: 'post',
+        url: 'http://localhost:4000/api/room/accessRoom',
+        data: {
+            roomId: 'mzi1ffZclHG8puYOiQbI',
+            password: 'asdfqwer'
+        }
+    }
+    axios(checkUserEmailConfig)
+        .then(function (response) {
+            console.log("roomId and RoomPassword check : ", response.data);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
+
+
 // getRooms();
 const test = async () => {
     // 방 생성
@@ -90,4 +110,5 @@ const test = async () => {
     // console.log("room Object: ", roomObject);
 }
 // test();
-checkUserEmail();
+accessRoom();
+// checkUserEmail();
