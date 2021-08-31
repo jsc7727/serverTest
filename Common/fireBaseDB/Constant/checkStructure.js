@@ -35,28 +35,31 @@ const checkUsersStructure = (user) => {
     try {
         const {
             nickname,
-            email,
-            password,
+            usingSns,
+            snsUserAttributes,
+            localUserAttributes,
             numberOfGames,
             report,
         } = user;
         if (
             isString(nickname) &&
-            isString(email) &&
-            isString(password) &&
+            isBoolean(usingSns) &&
+            isObject(snsUserAttributes) &&
+            isObject(localUserAttributes) &&
             isObject(numberOfGames) &&
             isObject(report)
         ) {
             return true;
         }
         else {
+            console.log("checkUsersStructure not same structure of value")
             return false;
         }
     }
     catch (error) {
+        console.error(error);
         console.log("checkUsersStructure catch error")
         return false;
-
     }
 }
 

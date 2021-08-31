@@ -15,11 +15,36 @@ exports.checkUser = async (req, res, next) => {
 exports.createUser = async (req, res, next) => {
     try {
         const userConfig = req.body;
-        const dbCollectionRooms = db.collection("rooms")
-        const res = await fireBaseUser.createUser({ userConfig })
-        const users = JSON.stringify({ });
-        res.send(users)
+        const createUserResult = await fireBaseUser.createUser({ user: userConfig })
+        const createUserResultJson = JSON.stringify(createUserResult);
+        res.send(createUserResultJson)
     } catch (error) {
         next(error)
     }
 };
+
+exports.deleteUserFromEmail = async (req, res, next) => {
+    // 수정중
+    try {
+        const email = req.body['email'];
+        const deleteUserResult = await fireBaseUser.deleteUserFromEmail({ email })
+        const deleteUserResultJson = JSON.stringify(deleteUserResult);
+        res.send(deleteUserResultJson)
+    } catch (error) {
+        next(error)
+    }
+};
+
+exports.deleteUserFromNickname = async (req, res, next) => {
+    try {
+        const nickname = req.body['nickname'];
+        const deleteUserResult = await fireBaseUser.deleteUserFromNickname({ nickname })
+        const deleteUserResultJson = JSON.stringify(deleteUserResult);
+        res.send(deleteUserResultJson)
+    } catch (error) {
+        next(error)
+    }
+};
+
+
+

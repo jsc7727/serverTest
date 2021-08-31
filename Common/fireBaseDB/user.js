@@ -4,38 +4,99 @@ const admin = require('firebase-admin');
 const db = admin.firestore();
 const FieldValue = admin.firestore.FieldValue;
 
-exports.createUser = async ({ user }) => {
-    if (checkUsersStructure(user)) {
-        const {
-            nickname,
-            email,
-            password,
-            numberOfGames,
-            report,
-        } = user;
-        const res = db.collection("users").doc(user.email);
-        const setReturn = await res.set({
-            nickname,
-            email,
-            password,
-            numberOfGames,
-            report
-        });
-        const updateReturn = await res.update({ timestamp: FieldValue.serverTimestamp() })
-        console.log(setReturn, updateReturn)
+exports.checkUserHasNickname = async ({ nickname }) => {
+    let userHasNickname = false;
+    let snapshot = { };
+    let userList = [];
+    console.log(nickname)
+    if (isString(nickname)) {
+        console.log("asdf1")
+        const userRef = db.collection('users');
+        snapshot = await userRef.where('nickname', "==", nickname).get();
+        console.log(snapshot.empty)
+        if (!snapshot.empty) {
+            console.log("asdf2")
+            userHasNickname = true;
+            snapshot.forEach(doc => {
+                userList.push(doc.data());
+            });
+        }
     }
     else {
-        console.error("createUsersArgumentCheck error");
+        console.error("getUserFromId error");
+    }
+    return { userList, userHasNickname };
+}
+
+exports.createUser = async ({ user }) => {
+    try {
+        if (checkUsersStructure(user)) {
+            const {
+                nickname,
+                usingSns,
+                snsUserAttributes,
+                localUserAttributes,
+                numberOfGames,
+                report,
+            } = user;
+            if (!(await this.checkUserHasNickname({ nickname })).userHasNickname) {
+                const res = db.collection("users").doc(nickname);
+                const setReturn = await res.set({
+                    nickname,
+                    usingSns,
+                    snsUserAttributes,
+                    localUserAttributes,
+                    numberOfGames,
+                    report,
+                });
+                const updateReturn = await res.update({ timestamp: FieldValue.serverTimestamp() })
+                // console.log(setReturn, updateReturn)
+                return { success: true }
+            }
+            else {
+                return { success: false }
+            }
+        }
+        else {
+            console.error("createUsersArgumentCheck error");
+            return { success: false }
+        }
+    }
+    catch (error) {
+        console.error(error);
+        return { success: false }
+    }
+
+}
+
+exports.deleteUserFromEmail = async ({ email }) => {
+    // 수정중
+    try {
+        if (isString(nickname)) {
+            const result = await db.collection('users').doc(email).delete();
+            console.log("deleteUser : ", result._writeTime);
+        }
+        else {
+            console.error("deleteUser error");
+        }
+    }
+    catch (error) {
+        console.error(error);
     }
 }
 
-exports.deleteUser = async ({ email }) => {
-    if (isString(email)) {
-        const result = await db.collection('users').doc(email).delete();
-        console.log("deleteUser : ", result._writeTime)
+exports.deleteUserFromNickname = async ({ nickname }) => {
+    try {
+        if (isString(nickname)) {
+            const result = await db.collection('users').doc(nickname).delete();
+            console.log("deleteUser : ", result._writeTime);
+        }
+        else {
+            console.error("deleteUser error");
+        }
     }
-    else {
-        console.error("deleteUser error");
+    catch (error) {
+        console.error(error);
     }
 }
 

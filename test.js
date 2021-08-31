@@ -99,6 +99,75 @@ const accessRoom = () => {
 }
 
 
+const createUser = () => {
+    const checkUserEmailConfig = {
+        method: 'post',
+        url: 'http://localhost:4000/api/user/createUser',
+        data: {
+            usingSns: false,
+            nickname: "jsc",
+            snsUserAttributes: {
+                type: "naver",
+                email: "test1@naver.com",
+                id: "jsc"
+            },
+            localUserAttributes: {
+                email: "test1@gmail.com",
+                password: "1234",
+            },
+            numberOfGames: {
+                win: 10,
+                lose: 0,
+            },
+            report: {
+                time: 123123123,
+                count: 0
+            }
+        },
+    }
+    axios(checkUserEmailConfig)
+        .then(function (response) {
+            console.log("createUser check : ", response.data);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
+const deleteUserFromEmail = () => {
+    const checkUserEmailConfig = {
+        method: 'post',
+        url: 'http://localhost:4000/api/user/deleteUser',
+        data: {
+            email: "test1@naver.com"
+        }
+    }
+    axios(checkUserEmailConfig)
+        .then(function (response) {
+            console.log("roomId and RoomPassword check : ", response.data);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
+const deleteUserFromNickname = () => {
+    const checkUserEmailConfig = {
+        method: 'post',
+        url: 'http://localhost:4000/api/user/deleteUserFromNickname',
+        data: {
+            nickname: 'jsc'
+        }
+    }
+    axios(checkUserEmailConfig)
+        .then(function (response) {
+            console.log("roomId and RoomPassword check : ", response.data);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
 
 // getRooms();
 const test = async () => {
@@ -110,5 +179,7 @@ const test = async () => {
     // console.log("room Object: ", roomObject);
 }
 // test();
-accessRoom();
+// accessRoom();
 // checkUserEmail();
+// createUser();
+deleteUserFromNickname();

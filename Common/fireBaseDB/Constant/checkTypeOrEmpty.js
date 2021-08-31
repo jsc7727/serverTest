@@ -3,7 +3,7 @@ const isString = (props) => {
 }
 
 const isObject = (props) => {
-    return typeof (props) === "Object" && props !== undefined;
+    return typeof (props) === "object" && props !== undefined;
 }
 
 const isBoolean = (props) => {
