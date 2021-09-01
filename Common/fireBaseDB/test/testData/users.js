@@ -51,11 +51,27 @@
 
 const users = [
     {
-        usingSns: false,
+        usingSns: true,
         sns: {
             type: "naver",
             email: "test1@naver.com",
-            nickname: "구름",
+            id: "jsc"
+        },
+        startUpSite: {
+            nickname: "장석찬",
+            email: "test1@gmail.com",
+            password: "1234",
+        },
+        numberOfGames: {
+            win: 10,
+            lose: 0,
+        }
+    },
+    {
+        usingSns: true,
+        sns: {
+            type: "naver",
+            email: "test1@naver.com",
             id: "jsc"
         },
         startUpSite: {
@@ -73,7 +89,6 @@ const users = [
         sns: {
             type: "naver",
             email: "test1@naver.com",
-            nickname: "구름",
             id: "jsc"
         },
         startUpSite: {
@@ -89,28 +104,9 @@ const users = [
     {
         usingSns: false,
         sns: {
-            type: "naver",
-            email: "test1@naver.com",
-            nickname: "구름",
-            id: "jsc"
-        },
-        startUpSite: {
-            nickname: "장석찬",
-            email: "test1@gmail.com",
-            password: "1234",
-        },
-        numberOfGames: {
-            win: 10,
-            lose: 0,
-        }
-    },
-    {
-        usingSns: false,
-        sns: {
-            type: "naver",
-            email: "test1@naver.com",
-            nickname: "구름",
-            id: "jsc"
+            type: "",
+            email: "",
+            id: ""
         },
         startUpSite: {
             nickname: "장석찬",

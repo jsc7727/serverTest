@@ -135,6 +135,7 @@ const createUser = () => {
 }
 
 const deleteUserFromEmail = () => {
+    // 수정중
     const checkUserEmailConfig = {
         method: 'post',
         url: 'http://localhost:4000/api/user/deleteUser',

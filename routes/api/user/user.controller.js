@@ -46,5 +46,17 @@ exports.deleteUserFromNickname = async (req, res, next) => {
     }
 };
 
+exports.deleteUserFromNickname = async (req, res, next) => {
+    try {
+        const nickname = req.body['nickname'];
+        const deleteUserResult = await fireBaseUser.deleteUserFromNickname({ nickname })
+        const deleteUserResultJson = JSON.stringify(deleteUserResult);
+        res.send(deleteUserResultJson)
+    } catch (error) {
+        next(error)
+    }
+};
+
+
 
 
