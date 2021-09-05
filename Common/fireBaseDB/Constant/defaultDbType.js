@@ -23,6 +23,26 @@ const user = {
     }
 }
 
+const user2 = {
+    nickname: "", // 닉네임 (중복X)
+    email: "", // 로그인용 id (중복X)
+    password: "", // 로그인용 password
+    usingSns: true,
+    sns: {
+        provider: 'kakao',
+        id: 1889505376,
+    },
+    numberOfGames: {
+        win: 0,
+        lose: 0,
+    },
+    report: {
+        count: 0,
+        time: 0,
+    }
+}
+
+
 
 module.exports = { room, user }
 

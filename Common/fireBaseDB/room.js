@@ -1,4 +1,4 @@
-const { checkRoomStructure, checkUsersStructure } = require('./Constant/checkStructure');
+const { checkRoomStructure } = require('./Constant/checkStructure');
 const { isString, isObject, isBoolean, isArray } = require('./Constant/checkTypeOrEmpty');
 const admin = require('firebase-admin');
 const db = admin.firestore();
@@ -67,7 +67,7 @@ exports.getListOfRooms = async () => {
 
 exports.getObjectOfRoom = async ({ roomId }) => {
     let success = false;
-    let room = { };
+    let room = {};
     if (isString(roomId)) {
         const result = await db.collection('rooms').doc(roomId).get();
         const { password, ...roomWithoutPassword } = result.data();

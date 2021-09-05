@@ -16,10 +16,22 @@ const socketModule = require("./Common/socketMoudle");
 const morgan = require('morgan');
 const passportModule = require('./Common/passport');
 const path = require('path');
+const passport = require('passport');
 
+// app.use(session({
+//     resave: true,
+//     saveUninitialized: false,
+//     secret: process.env.COOKIE_SECRET,
+//     cookie: {
+//         httpOnly: true,
+//         secure: false,
+//     }
+// }));
 
 // use Passport
-passportModule();
+app.use(passport.initialize());
+app.use(passport.session());
+passportModule(passport);
 
 // use morgan Library
 app.use(morgan('dev'))
@@ -34,7 +46,7 @@ app.use(jsonParser)
 socketModule({ io });
 
 // default page
-app.get('/', (req, res) => {
+app.get('/api/auth/login', (req, res) => {
     res.sendFile(path.join(__dirname + '/test.html'));
 })
 

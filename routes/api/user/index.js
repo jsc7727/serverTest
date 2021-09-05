@@ -1,10 +1,20 @@
 const router = require('express').Router()
 const controller = require('./user.controller')
+const { isLoggedIn, isNotLoggedIn } = require('../../middleWare');
 
-router.post('/checkUser', controller.checkUser);
+router.get('/getUser', controller.getUser);
+router.get('/getUserFromNickname', controller.getUserFromNickname);
 router.post('/createUser', controller.createUser);
+
+router.post('/deleteUserFromEmail', controller.deleteUserFromEmail);
 router.post('/deleteUserFromNickname', controller.deleteUserFromNickname);
-router.post('/', controller.deleteUserFromNickname);
+
+router.get('/checkEmailDuplication', controller.checkEmailDuplication);
+router.get('/checkNicknameDuplication', controller.checkNicknameDuplication);
+
+// router.post('/checkUser', controller.checkUser);
+// router.post('/createUser', controller.createUser);
+// router.post('/deleteUserFromNickname', controller.deleteUserFromNickname);
 
 
 

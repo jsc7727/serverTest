@@ -1,11 +1,10 @@
 const axios = require('axios');
 
-
 const getRooms = () => {
     const getRoomsConfig = {
         method: 'post',
         url: 'http://localhost:4000/api/room/getRooms',
-        headers: { }
+        headers: {}
     };
     axios(getRoomsConfig)
         .then(function (response) {
@@ -30,7 +29,7 @@ const getRoom = async (roomId) => {
     }
     catch (error) {
         console.error(error)
-        return { }
+        return {}
     }
 }
 
@@ -61,27 +60,8 @@ const createRoom = async () => {
     }
 }
 
-
-const checkUserEmail = () => {
-    const checkUserEmailConfig = {
-        method: 'post',
-        url: 'localhost::4000/api/user/checkUser',
-        data: {
-            email: 'test2@google.com'
-        }
-    }
-    axios(checkUserEmailConfig)
-        .then(function (response) {
-            console.log("해당 이메일로 가입한 사람 있는지 확인 : ", response.data);
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-}
-
-
 const accessRoom = () => {
-    const checkUserEmailConfig = {
+    const accessRoomConfig = {
         method: 'post',
         url: 'http://localhost:4000/api/room/accessRoom',
         data: {
@@ -89,7 +69,7 @@ const accessRoom = () => {
             password: 'asdfqwer'
         }
     }
-    axios(checkUserEmailConfig)
+    axios(accessRoomConfig)
         .then(function (response) {
             console.log("roomId and RoomPassword check : ", response.data);
         })
@@ -98,34 +78,30 @@ const accessRoom = () => {
         });
 }
 
-
 const createUser = () => {
-    const checkUserEmailConfig = {
+    const createUserConfig = {
         method: 'post',
         url: 'http://localhost:4000/api/user/createUser',
         data: {
+            nickname: "asdfd21", // 닉네임 (중복X)
+            email: "gbs0408711@naver.com", // 로그인용 id (중복X)
+            password: "sss", // 로그인용 password
             usingSns: false,
-            nickname: "jsc",
-            snsUserAttributes: {
-                type: "naver",
-                email: "test1@naver.com",
-                id: "jsc"
-            },
-            localUserAttributes: {
-                email: "test1@gmail.com",
-                password: "1234",
+            sns: {
+                provider: undefined,
+                id: undefined,
             },
             numberOfGames: {
-                win: 10,
+                win: 0,
                 lose: 0,
             },
             report: {
-                time: 123123123,
-                count: 0
+                count: 0,
+                time: 0,
             }
         },
     }
-    axios(checkUserEmailConfig)
+    axios(createUserConfig)
         .then(function (response) {
             console.log("createUser check : ", response.data);
         })
@@ -134,16 +110,69 @@ const createUser = () => {
         });
 }
 
+// const checkUserEmail = () => {
+//     const checkUserEmailConfig = {
+//         method: 'post',
+//         url: 'localhost:4000/api/user/checkUser',
+//         data: {
+//             email: 'test2@google.com'
+//         }
+//     }
+//     axios(checkUserEmailConfig)
+//         .then(function (response) {
+//             console.log("해당 이메일로 가입한 사람 있는지 확인 : ", response.data);
+//         })
+//         .catch(function (error) {
+//             console.log(error);
+//         });
+// }
+// checkUserEmail()
+
+
+
+const checkEmailDuplication = () => {
+    const email = "gbs040871@naver.com"
+    const checkEmailDuplicationConfig = {
+        method: 'get',
+        url: `http://localhost:4000/api/user/checkEmailDuplication?email=${email}`,
+    }
+    axios(checkEmailDuplicationConfig)
+        .then(function (response) {
+            console.log(`해당 이메일로 가입한 사람 있는지 확인 : ${email} :`, response.data);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+checkEmailDuplication()
+
+const checkNicknameDuplication = () => {
+    const nickname = "jj"
+    const checkNicknameDuplicationConfig = {
+        method: 'get',
+        url: `http://localhost:4000/api/user/checkNicknameDuplication?nickname=${nickname}`,
+    }
+    axios(checkNicknameDuplicationConfig)
+        .then(function (response) {
+            console.log(`해당 닉네임으로 가입한 사람 있는지 확인 : ${nickname} : `, response.data);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+checkNicknameDuplication()
+
 const deleteUserFromEmail = () => {
     // 수정중
-    const checkUserEmailConfig = {
+    const email = "gbs04087@naver.com"
+    const deleteUserFromEmailConfig = {
         method: 'post',
-        url: 'http://localhost:4000/api/user/deleteUser',
+        url: 'http://localhost:4000/api/user/deleteUserFromEmail',
         data: {
-            email: "test1@naver.com"
+            email
         }
     }
-    axios(checkUserEmailConfig)
+    axios(deleteUserFromEmailConfig)
         .then(function (response) {
             console.log("roomId and RoomPassword check : ", response.data);
         })
@@ -151,16 +180,18 @@ const deleteUserFromEmail = () => {
             console.log(error);
         });
 }
+// deleteUserFromEmail()
 
 const deleteUserFromNickname = () => {
-    const checkUserEmailConfig = {
+    const nickname = 'jsc';
+    const deleteUserFromNicknameConfig = {
         method: 'post',
         url: 'http://localhost:4000/api/user/deleteUserFromNickname',
         data: {
-            nickname: 'jsc'
+            nickname
         }
     }
-    axios(checkUserEmailConfig)
+    axios(deleteUserFromNicknameConfig)
         .then(function (response) {
             console.log("roomId and RoomPassword check : ", response.data);
         })
@@ -168,6 +199,7 @@ const deleteUserFromNickname = () => {
             console.log(error);
         });
 }
+deleteUserFromNickname()
 
 
 // getRooms();
@@ -183,4 +215,4 @@ const test = async () => {
 // accessRoom();
 // checkUserEmail();
 // createUser();
-deleteUserFromNickname();
+// deleteUserFromNickname();

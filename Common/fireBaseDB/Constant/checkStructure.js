@@ -33,19 +33,22 @@ const checkRoomStructure = (room) => {
 
 const checkUsersStructure = (user) => {
     try {
+        console.log(user)
         const {
             nickname,
+            email,
+            password,
             usingSns,
-            snsUserAttributes,
-            localUserAttributes,
+            sns,
             numberOfGames,
             report,
         } = user;
         if (
             isString(nickname) &&
+            isString(email) &&
+            isString(password) &&
             isBoolean(usingSns) &&
-            isObject(snsUserAttributes) &&
-            isObject(localUserAttributes) &&
+            isObject(sns) &&
             isObject(numberOfGames) &&
             isObject(report)
         ) {
