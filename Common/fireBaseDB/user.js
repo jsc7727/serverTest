@@ -1,8 +1,8 @@
 const { checkRoomStructure, checkUsersStructure } = require('./Constant/checkStructure');
 const { isString, isObject, isBoolean, isArray } = require('./Constant/checkTypeOrEmpty');
 const admin = require('firebase-admin');
-const db = admin.firestore();
 const FieldValue = admin.firestore.FieldValue;
+const db = admin.firestore();
 
 exports.isDuplicateNicknameAndEmail = async ({ nickname, email }) => {
     let duplicate = false;
@@ -37,20 +37,30 @@ exports.isDuplicateNicknameAndEmail = async ({ nickname, email }) => {
 
 exports.createUser = async ({ user }) => {
     try {
-        console.log(user)
+        // console.log(user)
+        const usingSns = true;
+        const sns = {
+            provider: "",
+            id: "",
+        }
+        const report = {
+            const: 0,
+            time: 0,
+        }
+        const numberOfGames = {
+            win: 0,
+            lose: 0,
+        }
         if (checkUsersStructure(user)) {
             const {
                 nickname,
                 email,
                 password,
-                usingSns,
-                sns,
-                numberOfGames,
-                report,
             } = user;
             if (!(await this.isDuplicateNicknameAndEmail({ nickname, email })).duplicate) {
-                const res = db.collection("users").doc(nickname);
-                const setReturn = await res.set({
+                // const res = db.collection("users").doc(nickname);
+                const res = db.collection("users");
+                const setReturn = await res.add({
                     nickname,
                     email,
                     password,
@@ -58,8 +68,9 @@ exports.createUser = async ({ user }) => {
                     sns,
                     numberOfGames,
                     report,
+                    timestamp: FieldValue.serverTimestamp(),
                 });
-                const updateReturn = await res.update({ timestamp: FieldValue.serverTimestamp() })
+                // const updateReturn = await res.update({ timestamp: FieldValue.serverTimestamp() })
                 // console.log(setReturn, updateReturn)
                 return { success: true }
             }
@@ -110,13 +121,13 @@ exports.deleteUserFromNickname = async ({ nickname }) => {
     try {
         console.log(nickname);
         if (isString(nickname)) {
-            const snapshot1 = await db.collection('users').doc(nickname).get();
-            console.log(snapshot1)
-            if (snapshot1.exists) {
-                const snapshot2 = await db.collection('users').doc(nickname).delete();
-                console.log("deleteUserFromNickname : ", snapshot2._writeTime);
+            const batch = db.batch();
+            const snapshot = await db.collection('users').where('nickname', '==', nickname).get();
+            snapshot.docs.forEach(async doc => {
+                batch.delete(doc.ref);
                 success = true;
-            }
+            });
+            await batch.commit();
         }
         else {
             console.error("deleteUserFromNickname error");
@@ -156,6 +167,7 @@ exports.getUserFromEmail = async ({ email }) => {
 exports.getUserFromNickname = async ({ nickname }) => {
     let success = false;
     let userList = [];
+    console.log("asdfdfasadsfasdfasfd")
     if (isString(nickname)) {
         const userRef = db.collection('users');
         const result = await userRef.where('nickname', "==", nickname).get();
@@ -199,6 +211,42 @@ exports.checkEmailDuplication = async ({ email }) => {
     if (isString(email)) {
         const userRef = db.collection('users');
         result = await userRef.where('email', "==", email).get();
+        if (!result.empty) {
+            duplicateEmail = true;
+        }
+    }
+    else {
+        console.error("checkEmailDuplication error");
+    }
+    return { duplicateEmail };
+}
+
+exports.getSnsInUser = async ({ provider, id }) => {
+    let success = false;
+    let user = {};
+    if (isString(provider) &&
+        isString(id)) {
+        const userRef = db.collection('users');
+        const result = await userRef.where("sns", "==", { id, provider }).get();
+        result.forEach((doc) => {
+            success = true;
+            const { password, sns, ...userForSend } = doc.data();
+            user = userForSend;
+        })
+    }
+    else {
+        console.error("getSnsInUser error");
+    }
+    return { user, success };
+}
+
+exports.setSnsInUser = async ({ provider, id }) => {
+    let duplicateEmail = false;
+    let result = {};
+    if (isString(email)) {
+        const userRef = db.collection('users');
+        result = await userRef.where('usingSns', "==", true)
+            .where("sns", "array-contains", { provider, id }).get();
         if (!result.empty) {
             duplicateEmail = true;
         }

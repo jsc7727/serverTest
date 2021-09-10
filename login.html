@@ -3,7 +3,15 @@
         <title>test</title>
     </head>
     <body>
-        <form action="/login" method="post" name="frm_login" id="frm_login">
+        <div>
+            <div>test form</div>
+            <form action="/api/user/getUser" method="get">
+                <label for="email">email : </label>
+                <input type="text" name="email"><br><br>
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+        <form action="/api/auth/login" method="post" name="frm_login" id="frm_login">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -11,7 +19,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <input type="text" id="username" name="username" class="form-control input-lg" placeholder="ID" required="required" autocomplete="off" />
+                            <input type="text" id="nickname" name="nickname" class="form-control input-lg" placeholder="ID" required="required" autocomplete="off" />
                         </div>
         
                         <div class="errorTxt"></div>

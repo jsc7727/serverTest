@@ -1,7 +1,10 @@
 const { checkRoomStructure } = require('./Constant/checkStructure');
 const { isString, isObject, isBoolean, isArray } = require('./Constant/checkTypeOrEmpty');
 const admin = require('firebase-admin');
+
+
 const db = admin.firestore();
+
 const FieldValue = admin.firestore.FieldValue;
 const crypto = require('crypto')
 const config = require('../../config');

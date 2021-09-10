@@ -38,19 +38,11 @@ const checkUsersStructure = (user) => {
             nickname,
             email,
             password,
-            usingSns,
-            sns,
-            numberOfGames,
-            report,
         } = user;
         if (
             isString(nickname) &&
             isString(email) &&
-            isString(password) &&
-            isBoolean(usingSns) &&
-            isObject(sns) &&
-            isObject(numberOfGames) &&
-            isObject(report)
+            isString(password)
         ) {
             return true;
         }

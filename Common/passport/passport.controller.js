@@ -1,5 +1,8 @@
-exports.NaverStrategyFunction = (accessToken, refreshToken, profile, done) => {
+// const { getSnsInUser } = require("../fireBaseDB/user");
+
+exports.NaverStrategyFunction = async (accessToken, refreshToken, profile, done, admin) => {
     var _profile = profile._json;
+    const { auth_provider, auth_id } = profile._json;
     // loginByThirdparty({
     //     'auth_type': 'naver',
     //     'auth_id': _profile.id,
@@ -18,8 +21,16 @@ exports.NaverStrategyFunction = (accessToken, refreshToken, profile, done) => {
     //         nickname: auth_name
     //     }
     // }
-    console.log(profile)
-    done(null, "asdf");
+
+    // const { user, success } = await getSnsInUser({ id: auth_id, provider: auth_provider });
+
+    // if (success) {
+    //     done(null, user.nickname);
+    // }
+    // else {
+    //     done(null, "");
+    // }
+
     // User.findOne({
     //     'naver.id': profile.id
     // }, function (err, user) {

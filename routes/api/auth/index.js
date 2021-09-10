@@ -7,7 +7,7 @@ router.get('/login/naver',
 // naver 로그인 연동 콜백
 router.get('/login/naver/callback',
     passport.authenticate('naver', {
-        successRedirect: '/성공',
+        successRedirect: '/api/auth/login',
         failureRedirect: '/api/auth/login',
         session: true,
     })
@@ -27,23 +27,21 @@ router.get('/login/kakao/callback',
 
 
 // 로컬 로그인
-router.get('/login/local',
-    passport.authenticate('local',
-        (error, user, info) => {
-            if (user) {
-                console.log("로그인 성공");
-            }
-            else {
-                console.log("로그인 실패");
-            }
-        })
+router.post('/login',
+    passport.authenticate('local', {
+        successRedirect: '/api/auth/login',
+        failureRedirect: '/api/auth/login',
+    }), // 인증실패시 401 리턴, {} -> 인증 스트레티지
+    (req, res) => {
+        res.redirect('/api/auth/login');
+    }
 );
-// kakao 로그인 연동 콜백
-router.get('/login/local/callback',
-    passport.authenticate('kakao', {
-        successRedirect: '/',
-        failureRedirect: '/login'
-    })
-);
+
+router.get('/logout', (req, res) => {
+    req.logout();
+    res.redirect('/api/auth/login');
+});
+
+
 
 module.exports = router;

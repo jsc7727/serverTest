@@ -2,7 +2,10 @@ const fireBaseUser = require('../../../Common/fireBaseDB/user');
 
 exports.getUser = async (req, res, next) => {
     try {
+        console.log("getUser Session : ", req.session);
+        // console.log("getUser from db data  : ", req);
         const email = req.query['email'];
+        console.log("getUser email ", email)
         const { user, success } = await fireBaseUser.getUserFromEmail({ email });
         const jsonUser = JSON.stringify({ user, success });
         res.send(jsonUser)

@@ -15,22 +15,33 @@ const cors = require('cors');
 const socketModule = require("./Common/socketMoudle");
 const morgan = require('morgan');
 const passportModule = require('./Common/passport');
-const path = require('path');
 const passport = require('passport');
+const path = require('path');
+const flash = require('connect-flash');
+const expressSession = require('express-session');
+const config = require('./config');
+const cookieParser = require('cookie-parser');
 
-// app.use(session({
-//     resave: true,
-//     saveUninitialized: false,
-//     secret: process.env.COOKIE_SECRET,
-//     cookie: {
-//         httpOnly: true,
-//         secure: false,
-//     }
-// }));
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser(config.secret));
+app.use(
+    expressSession({ // 옵션은 반드시 넣어줘야 한다.
+        resave: false, // 매번 세션 강제 저장
+        saveUninitialized: false, // 빈 값도 저장
+        secret: config.secret, // cookie 암호화 키. dotenv 라이브러리로 감춤
+        cookie: {
+            httpOnly: true, // javascript로 cookie에 접근하지 못하게 하는 옵션
+            secure: false, // https 프로토콜만 허락하는 지 여부
+        },
+    }),
+);
 
-// use Passport
+
+
 app.use(passport.initialize());
 app.use(passport.session());
+// app.use(session);
+// app.use(flash())
 passportModule(passport);
 
 // use morgan Library
@@ -46,8 +57,14 @@ app.use(jsonParser)
 socketModule({ io });
 
 // default page
+
+
 app.get('/api/auth/login', (req, res) => {
-    res.sendFile(path.join(__dirname + '/test.html'));
+    res.sendFile(path.join(__dirname + '/login.html'));
+})
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname + '/main.html'));
 })
 
 // api page

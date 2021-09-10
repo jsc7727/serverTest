@@ -23,7 +23,7 @@ const getUser = ({ email }) => {
     }
     axios(getUserConfig)
         .then(function (response) {
-            console.log(`해당 이메일로 가입한 사람 있는지 확인: ${email} : `, response.data);
+            console.log(`해당 이메일로 가입한 사용자 데이터 가져오기: ${email} : `, response.data);
         })
         .catch(function (error) {
             console.log(error);
@@ -37,7 +37,7 @@ const getUserFromNickname = ({ nickname }) => {
     }
     axios(getUserFromNicknameConfig)
         .then(function (response) {
-            console.log(`해당 닉네임으로 가입한 사람 있는지 확인 : ${nickname} : `, response.data);
+            console.log(`해당 닉네임으로 가입한 사람 데이터 가져오기 : ${nickname} : `, response.data);
         })
         .catch(function (error) {
             console.log(error);
@@ -84,7 +84,7 @@ const deleteUserFromEmail = ({ email }) => {
     }
     axios(deleteUserFromEmailConfig)
         .then(function (response) {
-            console.log("roomId and RoomPassword check : ", response.data);
+            console.log("해당 이메일로 가입한 계정 삭제 : ", response.data);
         })
         .catch(function (error) {
             console.log(error);
@@ -101,7 +101,7 @@ const deleteUserFromNickname = ({ nickname }) => {
     }
     axios(deleteUserFromNicknameConfig)
         .then(function (response) {
-            console.log("roomId and RoomPassword check : ", response.data);
+            console.log("해당 닉네임으로 가입한 계정 삭제 : ", response.data);
         })
         .catch(function (error) {
             console.log(error);
@@ -109,29 +109,17 @@ const deleteUserFromNickname = ({ nickname }) => {
 }
 
 
-// createUser({
-//     user: {
-//         nickname: "test12", // 닉네임 (중복X)
-//         email: "gbs0408711@naver.com", // 로그인용 id (중복X)
-//         password: "sss", // 로그인용 password
-//         usingSns: false,
-//         sns: {
-//             provider: undefined,
-//             id: undefined,
-//         },
-//         numberOfGames: {
-//             win: 0,
-//             lose: 0,
-//         },
-//         report: {
-//             count: 0,
-//             time: 0,
-//         }
-//     },
-// });
-// getUser({ email: "gbs0408711@naver.com" });
-// getUserFromNickname({ nickname: "asdfd21" });
-// checkEmailDuplication({ email: "gbs0408711@naver.com" })
-// checkNicknameDuplication({ nickname: "test1" })
+createUser({
+    user: {
+        nickname: "test12222", // 닉네임 (중복X)
+        email: "gbs0408711222@naver.com", // 로그인용 id (중복X)
+        password: "sss", // 로그인용 password
+    }
+});
+
+// getUser({ email: "gbs040871122@naver.com" });
+// getUserFromNickname({ nickname: "test1222" });
+// checkEmailDuplication({ email: "gbs0408711222@naver.com" }) // 있으며 true 없으면 false
+// checkNicknameDuplication({ nickname: "test1" }) // 있으면 true 없으면 false
 // deleteUserFromEmail({ email: "gbs0408711@naver.com" })
-// deleteUserFromNickname({ nickname: "test12" });
+// deleteUserFromNickname({ nickname: "test1222" });
