@@ -12,14 +12,16 @@ router.post('/deleteUserFromNickname', controller.deleteUserFromNickname);
 router.get('/checkEmailDuplication', controller.checkEmailDuplication);
 router.get('/checkNicknameDuplication', controller.checkNicknameDuplication);
 
-// router.post('/checkUser', controller.checkUser);
-// router.post('/createUser', controller.createUser);
-// router.post('/deleteUserFromNickname', controller.deleteUserFromNickname);
+router.get('/joinSns', isLoggedIn, controller.joinSns)
 
 
-
-// deleteUserFromEmail 수정 중 
-// router.post('/deleteUserFromEmail', controller.deleteUserFromEmail);
+router.post('/joinSns', isLoggedIn,
+    (req, res, next) => {
+        console.log(req.user);
+        
+        next();
+    }
+);
 
 
 module.exports = router

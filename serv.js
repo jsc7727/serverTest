@@ -21,9 +21,11 @@ const flash = require('connect-flash');
 const expressSession = require('express-session');
 const config = require('./config');
 const cookieParser = require('cookie-parser');
+const LocalStrategy = require('passport-local').Strategy;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(config.secret));
+app.use(flash());
 app.use(
     expressSession({ // 옵션은 반드시 넣어줘야 한다.
         resave: false, // 매번 세션 강제 저장

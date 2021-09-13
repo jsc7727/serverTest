@@ -84,16 +84,16 @@ exports.deleteUserFromNickname = async (req, res, next) => {
     }
 };
 
-// exports.duplicateNickname = async (req, res, next) => {
-//     try {
-//         const nickname = req.params['nickname'];
-//         const deleteUserResult = await fireBaseUser.checkNicknameDuplication({ nickname })
-//         const deleteUserResultJson = JSON.stringify(deleteUserResult);
-//         res.send(deleteUserResultJson)
-//     } catch (error) {
-//         next(error)
-//     }
-// };
+exports.joinSns = async (req, res, next) => {
+    try {
+        const nickname = req.params['nickname'];
+        const deleteUserResult = await fireBaseUser.joinSnsUser({ nickname })
+        const deleteUserResultJson = JSON.stringify(deleteUserResult);
+        res.send(deleteUserResultJson)
+    } catch (error) {
+        next(error)
+    }
+};
 
 // exports.duplicateEmail = async (req, res, next) => {
 //     try {

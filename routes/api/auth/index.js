@@ -1,4 +1,5 @@
 const passport = require('passport');
+const { isLoggedIn } = require('../../middleWare');
 const router = require('express').Router()
 
 router.get('/login/naver',
@@ -7,7 +8,7 @@ router.get('/login/naver',
 // naver 로그인 연동 콜백
 router.get('/login/naver/callback',
     passport.authenticate('naver', {
-        successRedirect: '/api/auth/login',
+        successRedirect: '/',
         failureRedirect: '/api/auth/login',
         session: true,
     })
@@ -20,26 +21,25 @@ router.get('/login/kakao',
 // kakao 로그인 연동 콜백
 router.get('/login/kakao/callback',
     passport.authenticate('kakao', {
-        successRedirect: '/성공',
+        successRedirect: '/',
         failureRedirect: '/api/auth/login'
     })
 );
 
 
 // 로컬 로그인
-router.post('/login',
+router.post('/login/local',
     passport.authenticate('local', {
-        successRedirect: '/api/auth/login',
+        successRedirect: '/',
         failureRedirect: '/api/auth/login',
-    }), // 인증실패시 401 리턴, {} -> 인증 스트레티지
-    (req, res) => {
-        res.redirect('/api/auth/login');
-    }
+    })
 );
 
-router.get('/logout', (req, res) => {
+
+
+router.get('/logout', isLoggedIn, (req, res) => {
     req.logout();
-    res.redirect('/api/auth/login');
+    res.redirect('/');
 });
 
 

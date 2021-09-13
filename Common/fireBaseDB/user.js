@@ -221,6 +221,38 @@ exports.checkEmailDuplication = async ({ email }) => {
     return { duplicateEmail };
 }
 
+exports.checkLocalLogin = async ({ nickname, password }) => {
+    let success = false;
+    let user = {}
+    try {
+        console.log("checkLocalLogin function");
+        if (isString(nickname) &&
+            isString(password)) {
+            const snapshot = await db.collection('users')
+                .where("nickname", "==", nickname)
+                .where('password', '==', password)
+                .get();
+            if (!snapshot.empty && snapshot._size === 1) {
+                snapshot.forEach(async doc => {
+                    success = true;
+                    const { password, sns, ...userForSend } = doc.data();
+                    user = userForSend;
+                });
+            }
+        }
+        else {
+            console.error("joinSnsInUser argument error");
+        }
+        console.log("user", user)
+        return { user, success };
+    }
+    catch (err) {
+        return { user, success: false };
+    }
+}
+
+
+
 exports.getSnsInUser = async ({ provider, id }) => {
     let success = false;
     let user = {};
@@ -240,13 +272,42 @@ exports.getSnsInUser = async ({ provider, id }) => {
     return { user, success };
 }
 
-exports.setSnsInUser = async ({ provider, id }) => {
+exports.joinSnsInUser = async ({ nickname, email, provider, id }) => {
+    try {
+        let success = false;
+        if (isString(email)) {
+            const batch = db.batch();
+            const snapshot = await db.collection('users')
+                .where("usingSns", "==", false)
+                .where('nickname', '==', nickname)
+                .where("email", "==", email)
+                .where("sns", "==", { provider: "", id: "" })
+                .get();
+            if (snapshot.empty) {
+                snapshot.docs.forEach(async doc => {
+                    batch.update({ usingSns: true, sns: { provider, id } });
+                    success = true;
+                });
+                await batch.commit();
+            }
+        }
+        else {
+            console.error("joinSnsInUser argument error");
+        }
+        return { success };
+    }
+    catch (err) {
+        return { success: false };
+    }
+}
+
+exports.disconnectSnsInUser = async ({ nickname, email }) => {
     let duplicateEmail = false;
     let result = {};
     if (isString(email)) {
         const userRef = db.collection('users');
-        result = await userRef.where('usingSns', "==", true)
-            .where("sns", "array-contains", { provider, id }).get();
+        result = await userRef.where('usingSns', "==", false)
+            .where("nickname", "array-contains", { provider: "", id: "" }).get();
         if (!result.empty) {
             duplicateEmail = true;
         }

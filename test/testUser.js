@@ -109,15 +109,15 @@ const deleteUserFromNickname = ({ nickname }) => {
 }
 
 
-createUser({
-    user: {
-        nickname: "test12222", // 닉네임 (중복X)
-        email: "gbs0408711222@naver.com", // 로그인용 id (중복X)
-        password: "sss", // 로그인용 password
-    }
-});
+// createUser({
+//     user: {
+//         nickname: "test12222", // 닉네임 (중복X)
+//         email: "gbs0408711222@naver.com", // 로그인용 id (중복X)
+//         password: "sss", // 로그인용 password
+//     }
+// });
 
-// getUser({ email: "gbs040871122@naver.com" });
+getUser({ email: "gbs040871122@naver.com" });
 // getUserFromNickname({ nickname: "test1222" });
 // checkEmailDuplication({ email: "gbs0408711222@naver.com" }) // 있으며 true 없으면 false
 // checkNicknameDuplication({ nickname: "test1" }) // 있으면 true 없으면 false

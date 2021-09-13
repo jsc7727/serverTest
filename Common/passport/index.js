@@ -3,18 +3,9 @@ const NaverStrategy = require('passport-naver').Strategy;
 const KakaoStrategy = require('passport-kakao').Strategy;
 const LocalStrategy = require('passport-local').Strategy;
 
-const { getSnsInUser, getUserFromNickname } = require("../fireBaseDB/user");
+const { getSnsInUser, getUserFromNickname, checkLocalLogin } = require("../fireBaseDB/user");
 
-
-const {
-    NaverStrategyFunction,
-    KakaoStrategyFunction,
-    LocalStrategyFunction
-} = require('./passport.controller');
-
-module.exports = (passport, admin) => {
-
-
+module.exports = (passport) => {
     passport.serializeUser(function (user, done) {
         console.log('passport session save: ', user.nickname);
         done(null, user.nickname);
@@ -77,9 +68,23 @@ module.exports = (passport, admin) => {
 
     passport.use(
         new LocalStrategy(
-            LocalStrategyFunction
+            {
+                usernameField: 'nickname',
+                passwordField: 'password',
+                passReqToCallback: true //인증을 수행하는 인증 함수로 HTTP request를 그대로  전달할지 여부를 결정한다
+            },
+            async (req, nickname, password, done) => {
+                const { user, success } = await checkLocalLogin({ nickname, password });
+                if (success) {
+                    console.log("로컬 로그인 성공");
+                    done(null, user);
+                }
+                else {
+                    console.log("로컬 로그인 실패");
+                    done("로그인 실! 패!");
+                }
+            }
         )
     );
-
 }
 
