@@ -8,6 +8,16 @@ exports.isLoggedIn = function (req, res, next) {
     }
 };
 
+exports.haveNickname = function (req, res, next) {
+    if (req.user.nickname === "") {
+        res.redirect("/setNickname");
+    }
+    else {
+        next();
+    }
+};
+
+
 exports.isNotLoggedIn = function (req, res, next) {
     if (!req.isAuthenticated()) {
         next();

@@ -16,12 +16,12 @@ const socketModule = require("./Common/socketMoudle");
 const morgan = require('morgan');
 const passportModule = require('./Common/passport');
 const passport = require('passport');
-const path = require('path');
 const flash = require('connect-flash');
 const expressSession = require('express-session');
 const config = require('./config');
 const cookieParser = require('cookie-parser');
 const LocalStrategy = require('passport-local').Strategy;
+const routerApp = require('./routes/app');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(config.secret));
@@ -42,8 +42,6 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
-// app.use(session);
-// app.use(flash())
 passportModule(passport);
 
 // use morgan Library
@@ -61,13 +59,17 @@ socketModule({ io });
 // default page
 
 
-app.get('/api/auth/login', (req, res) => {
-    res.sendFile(path.join(__dirname + '/login.html'));
-})
+// app.get('/api/auth/login', (req, res) => {
+//     res.sendFile(path.join(__dirname + '/login.html'));
+// })
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname + '/main.html'));
-})
+// app.get('/', (req, res) => {
+//     res.sendFile(path.join(__dirname + '/main.html'));
+// })
+
+routerApp(app);
+
+
 
 // api page
 app.use('/api', require('./routes/api'))

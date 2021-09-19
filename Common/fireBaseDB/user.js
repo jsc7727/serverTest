@@ -7,7 +7,8 @@ const db = admin.firestore();
 exports.isDuplicateNicknameAndEmail = async ({ nickname, email }) => {
     let duplicate = false;
     let userList = [];
-    if (isString(nickname)) {
+    if (isString(nickname) &&
+        isString(email)) {
         const userRef = db.collection('users');
         const snapshot1 = await userRef.where('nickname', "==", nickname).get();
         console.log(snapshot1.empty)
@@ -35,10 +36,68 @@ exports.isDuplicateNicknameAndEmail = async ({ nickname, email }) => {
     return { userList, duplicate };
 }
 
+// exports.isDuplicateNicknameAndEmail = async ({ nickname, email }) => {
+//     let duplicate = false;
+//     let userList = [];
+//     if (isString(nickname) &&
+//         isString(email)) {
+
+
+
+//     }
+//     else {
+//         console.error("isDuplicateNicknameAndEmail error");
+//     }
+//     return { userList, duplicate };
+
+// }
+
+exports.isDuplicateNickname = async ({ nickname }) => {
+    let duplicate = false;
+    let userList = [];
+    if (isString(nickname)) {
+        const userRef = db.collection('users');
+        const snapshot = await userRef.where('nickname', "==", nickname).get();
+        console.log(snapshot.empty)
+        if (!snapshot.empty) {
+            duplicate = true;
+            snapshot.forEach(doc => {
+                userList.push(doc.data());
+            });
+            console.log(userList)
+        }
+    }
+    else {
+        console.error("isDuplicateNickname error");
+    }
+    return { userList, duplicate };
+}
+
+exports.isDuplicateEmail = async ({ email }) => {
+    let duplicate = false;
+    let userList = [];
+    if (isString(email)) {
+        const userRef = db.collection('users');
+        const snapshot = await userRef.where('email', '==', email).get();
+        console.log(snapshot.empty)
+        if (!snapshot.empty) {
+            duplicate = true;
+            snapshot.forEach(doc => {
+                userList.push(doc.data());
+            });
+            console.log(userList)
+        }
+    }
+    else {
+        console.error("isDuplicateEmail error");
+    }
+    return { userList, duplicate };
+}
+
 exports.createUser = async ({ user }) => {
     try {
         // console.log(user)
-        const usingSns = true;
+        const usingSns = false;
         const sns = {
             provider: "",
             id: "",
@@ -80,6 +139,52 @@ exports.createUser = async ({ user }) => {
         }
         else {
             console.error("createUsersArgumentCheck error");
+            return { success: false }
+        }
+    }
+    catch (error) {
+        console.error(error);
+        return { success: false }
+    }
+
+}
+
+
+exports.createUserForSns = async ({ user }) => {
+    try {
+        // console.log(user)
+        const usingSns = true;
+        const report = {
+            const: 0,
+            time: 0,
+        }
+        const numberOfGames = {
+            win: 0,
+            lose: 0,
+        }
+        if (isString(user.email) &&
+            isObject(user.sns)) {
+            if (!(await this.isDuplicateEmail({ email: user.email })).duplicate) {
+                // const res = db.collection("users").doc(nickname);
+                const res = db.collection("users");
+                const setReturn = await res.add({
+                    nickname: "",
+                    email: user.email,
+                    password: false,
+                    usingSns,
+                    sns: user.sns,
+                    numberOfGames,
+                    report,
+                    timestamp: FieldValue.serverTimestamp(),
+                });
+                return { success: true }
+            }
+            else {
+                return { success: false }
+            }
+        }
+        else {
+            console.error("createUserForSns ArgumentCheck error");
             return { success: false }
         }
     }
@@ -147,15 +252,12 @@ exports.getUserFromEmail = async ({ email }) => {
     if (isString(email)) {
         const userRef = db.collection('users');
         const result = await userRef.where('email', "==", email).get();
-        if (!result.empty) {
+        if (!result.empty && result._size === 1) {
             success = true;
             result.forEach((doc) => {
-                const { report, numberOfGames, nickname, email } = doc.data()
-                userList.push({ report, numberOfGames, nickname, email })
+                const { report, numberOfGames, nickname, email, sns } = doc.data()
+                userList.push({ report, numberOfGames, nickname, email, sns })
             });
-        }
-        if (userList.length > 1) {
-            throw new Error("해당 이메일을 가지고 있는 user가 여러명임")
         }
     }
     else {
@@ -167,19 +269,15 @@ exports.getUserFromEmail = async ({ email }) => {
 exports.getUserFromNickname = async ({ nickname }) => {
     let success = false;
     let userList = [];
-    console.log("asdfdfasadsfasdfasfd")
     if (isString(nickname)) {
         const userRef = db.collection('users');
         const result = await userRef.where('nickname', "==", nickname).get();
-        if (!result.empty) {
+        if (!result.empty && result._size === 1) {
             success = true;
             result.forEach((doc) => {
                 const { report, numberOfGames, nickname, email } = doc.data()
                 userList.push({ report, numberOfGames, nickname, email })
             });
-        }
-        if (userList.length > 1) {
-            throw new Error("해당 이메일을 가지고 있는 user가 여러명임")
         }
     }
     else {
@@ -241,7 +339,7 @@ exports.checkLocalLogin = async ({ nickname, password }) => {
             }
         }
         else {
-            console.error("joinSnsInUser argument error");
+            console.error("checkLocalLogin argument error");
         }
         console.log("user", user)
         return { user, success };
@@ -256,6 +354,8 @@ exports.checkLocalLogin = async ({ nickname, password }) => {
 exports.getSnsInUser = async ({ provider, id }) => {
     let success = false;
     let user = {};
+    let docId = "";
+    console.log(provider, id)
     if (isString(provider) &&
         isString(id)) {
         const userRef = db.collection('users');
@@ -264,12 +364,14 @@ exports.getSnsInUser = async ({ provider, id }) => {
             success = true;
             const { password, sns, ...userForSend } = doc.data();
             user = userForSend;
+            docId = doc.id;
         })
     }
     else {
         console.error("getSnsInUser error");
     }
-    return { user, success };
+    console.log("getSnsInUser : ", docId)
+    return { user, success, docId };
 }
 
 exports.joinSnsInUser = async ({ nickname, email, provider, id }) => {
@@ -301,6 +403,26 @@ exports.joinSnsInUser = async ({ nickname, email, provider, id }) => {
     }
 }
 
+
+exports.setNickname = async ({ nickname, id, provider }) => {
+    let success = false;
+    try {
+        if (!await this.checkNicknameDuplication({ nickname }).duplicate) {
+            const resultGetSnsInUser = await this.getSnsInUser({ id, provider });
+            if (resultGetSnsInUser.success && resultGetSnsInUser.user.nickname === '') {
+                success = true;
+                const userRef = db.collection('users').doc(resultGetSnsInUser.docId);
+                await userRef.update({ nickname })
+            }
+        }
+    }
+    catch (err) {
+        console.log(err)
+    }
+    return { success }
+}
+
+
 exports.disconnectSnsInUser = async ({ nickname, email }) => {
     let duplicateEmail = false;
     let result = {};
@@ -313,7 +435,7 @@ exports.disconnectSnsInUser = async ({ nickname, email }) => {
         }
     }
     else {
-        console.error("checkEmailDuplication error");
+        console.error("disconnectSnsInUser error");
     }
     return { duplicateEmail };
 }

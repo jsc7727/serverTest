@@ -5,12 +5,12 @@ const router = require('express').Router()
 router.get('/login/naver',
     passport.authenticate('naver')
 );
+
 // naver 로그인 연동 콜백
 router.get('/login/naver/callback',
     passport.authenticate('naver', {
         successRedirect: '/',
         failureRedirect: '/api/auth/login',
-        session: true,
     })
 );
 

@@ -32,9 +32,9 @@ exports.getUserFromNickname = async (req, res, next) => {
 exports.checkNicknameDuplication = async (req, res, next) => {
     try {
         const nickname = req.query.nickname;
-        const createUserResult = await fireBaseUser.checkNicknameDuplication({ nickname })
-        const createUserResultJson = JSON.stringify(createUserResult);
-        res.send(createUserResultJson)
+        const result = await fireBaseUser.checkNicknameDuplication({ nickname })
+        const jsonResult = JSON.stringify(result);
+        res.send(jsonResult)
     } catch (error) {
         next(error)
     }
@@ -42,20 +42,20 @@ exports.checkNicknameDuplication = async (req, res, next) => {
 exports.checkEmailDuplication = async (req, res, next) => {
     try {
         const email = req.query.email;
-        const createUserResult = await fireBaseUser.checkEmailDuplication({ email })
-        const createUserResultJson = JSON.stringify(createUserResult);
-        res.send(createUserResultJson)
+        const result = await fireBaseUser.checkEmailDuplication({ email })
+        const jsonResult = JSON.stringify(result);
+        res.send(jsonResult)
     } catch (error) {
         next(error)
     }
 }
 
-exports.createUser = async (req, res, next) => {
+exports.register = async (req, res, next) => {
     try {
         const userConfig = req.body;
-        const createUserResult = await fireBaseUser.createUser({ user: userConfig })
-        const createUserResultJson = JSON.stringify(createUserResult);
-        res.send(createUserResultJson)
+        const result = await fireBaseUser.createUser({ user: userConfig })
+        const jsonResult = JSON.stringify(result);
+        res.send(jsonResult)
     } catch (error) {
         next(error)
     }
@@ -95,17 +95,24 @@ exports.joinSns = async (req, res, next) => {
     }
 };
 
-// exports.duplicateEmail = async (req, res, next) => {
-//     try {
-//         const email = req.params['email'];
-//         const deleteUserResult = await fireBaseUser.checkEmailDuplication({ email })
-//         const deleteUserResultJson = JSON.stringify(deleteUserResult);
-//         res.send(deleteUserResultJson)
-//     } catch (error) {
-//         next(error)
-//     }
-// };
-
-
-
+exports.setNickname = async (req, res, next) => {
+    try {
+        const nickname = req.body['nickname'];
+        console.log(req.user)
+        const { id, provider } = req.user.sns;
+        const deleteUserResult = await fireBaseUser.setNickname({ nickname, id, provider })
+        // const deleteUserResultJson = JSON.stringify(deleteUserResult);
+        // res.send(deleteUserResultJson)
+        if (deleteUserResult.success) {
+            console.log("asdf123123")
+            res.redirect('/')
+        }
+        else {
+            console.log("qwer123123")
+            res.redirect('/api/setNickname')
+        }
+    } catch (error) {
+        next(error)
+    }
+};
 
